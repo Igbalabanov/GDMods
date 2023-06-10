@@ -9,9 +9,9 @@ class $modify(PauseLayer) {
 
     void onQuit(CCObject* target) {
 
-		// Workaround Because the tPauseLayer::onQui in createQuickPopup runs the modified function
+		// Workaround Because the PauseLayer::onQuit in createQuickPopup runs the modified function
 		if (exit) { 
-			exit = false;
+			// exit = false;
 			PauseLayer::onQuit(target);
 			return;
 		}
