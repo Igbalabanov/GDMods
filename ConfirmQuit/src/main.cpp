@@ -5,13 +5,12 @@ using namespace geode::prelude;
 
 class $modify(PauseLayer) {
 
-	bool exit = false;
+	bool m_exit = false;
 
     void onQuit(CCObject* target) {
 
 		// Workaround Because the PauseLayer::onQuit in createQuickPopup runs the modified function
-		if (exit) { 
-			// exit = false;
+		if (m_exit) { 
 			PauseLayer::onQuit(target);
 			return;
 		}
@@ -22,7 +21,7 @@ class $modify(PauseLayer) {
 			"No", "Yes",
 			[&](auto, bool btn2) {
 				if (btn2) {
-					exit = true;
+					m_fields->m_exit = true;
 					PauseLayer::onQuit(target);
 				}
 			}
