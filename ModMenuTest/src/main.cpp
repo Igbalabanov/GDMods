@@ -1,12 +1,15 @@
+#include <shellapi.h>
 #include <imgui-cocos.hpp>
+
 #include <Geode/modify/OptionsLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
-#include <shellapi.h>
 #include <Geode/loader/Mod.hpp>
+#include <Geode/modify/PlayerObject.hpp>
 
 using namespace geode::prelude;
 
 bool isNoclip = false;
+bool isNotHide = false;
 
 class $modify(PlayLayer) {
     void destroyPlayer(PlayerObject* p, GameObject* g) 
@@ -14,6 +17,16 @@ class $modify(PlayLayer) {
         if (!isNoclip)
         {
             PlayLayer::destroyPlayer(p, g);
+        }
+    }
+};
+
+class $modify(PlayerObject) {
+    void toggleVisibility(bool p0)
+    {
+        if (!isNotHide)
+        {
+            PlayerObject::toggleVisibility(p0);
         }
     }
 };
@@ -89,6 +102,24 @@ $on_mod(Loaded) {
                 OptionsLayer::addToCurrentScene(false);
             }
 
+            if (ImGui::Button("Mod Options"))
+                ImGui::OpenPopup("Mod Options");
+                    
+            ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+            if (ImGui::BeginPopupModal("Mod Options", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                ImGui::Text("Nothing here yet");
+                ImGui::Separator();
+
+                if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+                ImGui::SetItemDefaultFocus();
+                ImGui::SameLine();
+                if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+                ImGui::EndPopup();
+            }
+
             ImGui::End();
 
 
@@ -96,7 +127,27 @@ $on_mod(Loaded) {
             ImGui::Begin("Cheats");
             
             ImGui::Checkbox("Noclip", &isNoclip);
-            
+
+            ImGui::Checkbox("No Hide Player", &isNotHide);
+
+
+            // if (ImGui::Button("Auto Complete")) // TODO: this
+            //     ImGui::OpenPopup("Auto complete?");
+            // if (ImGui::BeginPopupModal("Auto complete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+            // {
+
+            //     if (ImGui::Button("OK", ImVec2(120, 0))) 
+            //     {
+            //         ImGui::CloseCurrentPopup(); 
+            //         PlayLayer::levelComplete();
+            //     }
+
+            //     ImGui::SetItemDefaultFocus();
+            //     ImGui::SameLine();
+            //     if (ImGui::Button("No", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+            //     ImGui::EndPopup();
+            // }
+
             ImGui::End();
         }
     });
