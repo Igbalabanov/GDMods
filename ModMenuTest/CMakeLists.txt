@@ -8,6 +8,7 @@ file(GLOB SOURCES
 	src/*.cpp
 )
 
+
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 if (NOT DEFINED ENV{GEODE_SDK})
@@ -19,3 +20,9 @@ endif()
 add_subdirectory($ENV{GEODE_SDK} $ENV{GEODE_SDK}/build)
 
 setup_geode_mod(${PROJECT_NAME})
+
+
+CPMAddPackage("gh:matcool/gd-imgui-cocos#b0064c6") # specify a commit!
+
+target_link_libraries(${PROJECT_NAME} imgui-cocos)
+
