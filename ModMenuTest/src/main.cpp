@@ -145,24 +145,6 @@ $on_mod(Loaded) {
 
             ImGui::Checkbox("No Hide Player", &isNotHide);
 
-
-            // if (ImGui::Button("Auto Complete")) // TODO: this
-            //     ImGui::OpenPopup("Auto complete?");
-            // if (ImGui::BeginPopupModal("Auto complete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-            // {
-
-            //     if (ImGui::Button("OK", ImVec2(120, 0))) 
-            //     {
-            //         ImGui::CloseCurrentPopup(); 
-            //         PlayLayer::levelComplete();
-            //     }
-
-            //     ImGui::SetItemDefaultFocus();
-            //     ImGui::SameLine();
-            //     if (ImGui::Button("No", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
-            //     ImGui::EndPopup();
-            // }
-
             ImGui::End();
         }
     });
