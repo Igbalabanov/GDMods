@@ -5,11 +5,26 @@
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/loader/Mod.hpp>
 #include <Geode/modify/PlayerObject.hpp>
+#include <Geode/modify/CCKeyboardDispatcher.hpp>
+
 
 using namespace geode::prelude;
 
+bool isMenuShown = true;
+
 bool isNoclip = false;
 bool isNotHide = false;
+
+class $modify(CCKeyboardDispatcher) {
+    bool dispatchKeyboardMSG(enumKeyCodes key, bool down) {
+        if (down && (key == KEY_Tab GEODE_MACOS(|| key == KEY_Tab))) {
+            isMenuShown = !isMenuShown;
+            return true;
+        }
+        return CCKeyboardDispatcher::dispatchKeyboardMSG(key, down);
+    }
+};
+
 
 class $modify(PlayLayer) {
     void destroyPlayer(PlayerObject* p, GameObject* g) 
@@ -33,8 +48,7 @@ class $modify(PlayerObject) {
 
 $on_mod(Loaded) {
 
-    bool isMenuShown = true;
-
+    
 
     ImGuiCocos::get().setup([&] {
         // ImGui Style from https://www.unknowncheats.me/forum/c-and-c-/189635-imgui-style-settings.html
@@ -88,6 +102,7 @@ $on_mod(Loaded) {
             style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
 
     }).draw([&] {
+
 
         if (isMenuShown) {
             ImGui::Begin("Misc");
