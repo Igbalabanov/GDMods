@@ -1,5 +1,6 @@
 #include <shellapi.h>
 #include <imgui-cocos.hpp>
+#include <chrono>
 
 #include <Geode/modify/OptionsLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
@@ -7,13 +8,14 @@
 #include <Geode/modify/PlayerObject.hpp>
 #include <Geode/modify/CCKeyboardDispatcher.hpp>
 
-
 using namespace geode::prelude;
 
 bool isMenuShown = true;
 
 bool isNoclip = false;
 bool isNotHide = false;
+bool isNotShake = false;
+
 
 class $modify(CCKeyboardDispatcher) {
     bool dispatchKeyboardMSG(enumKeyCodes key, bool down) {
@@ -27,6 +29,25 @@ class $modify(CCKeyboardDispatcher) {
 
 
 class $modify(PlayLayer) {
+
+	bool init(GJGameLevel* TLevel) {
+		if (!PlayLayer::init(TLevel))
+			return false;
+
+		auto winSize = CCDirector::get()->getWinSize();
+
+		auto label = CCLabelBMFont::create("Test", "bigFont.fnt");
+        label->setPosition(winSize * 0.90f);
+        label->setScale(0.5f);
+
+        label->setOpacity(128);
+
+        label->setZOrder(9999); // Tweak this
+		this->addChild(label);
+
+		return true;
+	}
+
     void destroyPlayer(PlayerObject* p, GameObject* g) 
     {
         if (!isNoclip)
@@ -34,6 +55,14 @@ class $modify(PlayLayer) {
             PlayLayer::destroyPlayer(p, g);
         }
     }
+
+    void shakeCamera(float p0, float p1, float p2) {
+        if (!isNotShake)
+        {
+            PlayLayer::shakeCamera(p0, p1, p2);
+        }
+    }
+
 };
 
 class $modify(PlayerObject) {
@@ -143,9 +172,18 @@ $on_mod(Loaded) {
             
             ImGui::Checkbox("Noclip", &isNoclip);
 
+            ImGui::End();
+
+
+
+            ImGui::Begin("Visual");
+            
+            ImGui::Checkbox("No Camera Shake", &isNotShake);
+
             ImGui::Checkbox("No Hide Player", &isNotHide);
 
             ImGui::End();
+
         }
     });
 }
