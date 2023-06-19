@@ -12,9 +12,12 @@ using namespace geode::prelude;
 
 bool isMenuShown = true;
 
+
 bool isNoclip = false;
-bool isNotHide = false;
-bool isNotShake = false;
+
+auto isNotHide = Mod::get()->getSavedValue<bool>("isNotHide");
+auto isNotShake = Mod::get()->getSavedValue<bool>("isNotShake");
+auto isNotDeathEffect = Mod::get()->getSavedValue<bool>("isNotDeathEffect");
 
 
 class $modify(CCKeyboardDispatcher) {
@@ -30,23 +33,6 @@ class $modify(CCKeyboardDispatcher) {
 
 class $modify(PlayLayer) {
 
-	bool init(GJGameLevel* TLevel) {
-		if (!PlayLayer::init(TLevel))
-			return false;
-
-		auto winSize = CCDirector::get()->getWinSize();
-
-		auto label = CCLabelBMFont::create("Test", "bigFont.fnt");
-        label->setPosition(winSize * 0.90f);
-        label->setScale(0.5f);
-
-        label->setOpacity(128);
-
-        label->setZOrder(9999); // Tweak this
-		this->addChild(label);
-
-		return true;
-	}
 
     void destroyPlayer(PlayerObject* p, GameObject* g) 
     {
@@ -55,6 +41,7 @@ class $modify(PlayLayer) {
             PlayLayer::destroyPlayer(p, g);
         }
     }
+
 
     void shakeCamera(float p0, float p1, float p2) {
         if (!isNotShake)
@@ -71,6 +58,14 @@ class $modify(PlayerObject) {
         if (!isNotHide)
         {
             PlayerObject::toggleVisibility(p0);
+        }
+    }
+
+    void playDeathEffect() 
+    {
+        if (!isNotDeathEffect)
+        {
+            PlayerObject::playDeathEffect();
         }
     }
 };
@@ -179,6 +174,11 @@ $on_mod(Loaded) {
             ImGui::Begin("Visual");
             
             ImGui::Checkbox("No Camera Shake", &isNotShake);
+
+            if (ImGui::Checkbox("No Death Effect", &isNotDeathEffect))
+            {
+                Mod::get()->setSavedValue<bool>("isNotDeathEffect", isNotDeathEffect);
+            }
 
             ImGui::Checkbox("No Hide Player", &isNotHide);
 
