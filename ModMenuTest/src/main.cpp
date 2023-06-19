@@ -141,39 +141,24 @@ $on_mod(Loaded) {
                 OptionsLayer::addToCurrentScene(false);
             }
 
-            if (ImGui::Button("Mod Options"))
-                ImGui::OpenPopup("Mod Options");
-                    
-            ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-            if (ImGui::BeginPopupModal("Mod Options", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-            {
-                ImGui::Text("Nothing here yet");
-                ImGui::Separator();
-
-                if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
-                ImGui::SetItemDefaultFocus();
-                ImGui::SameLine();
-                if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
-                ImGui::EndPopup();
-            }
-
             ImGui::End();
 
 
-            // Cheats
-            ImGui::Begin("Cheats");
+            // Cheats and more stuff
+            ImGui::Begin("Player");
             
             ImGui::Checkbox("Noclip", &isNoclip);
 
             ImGui::End();
 
 
-
+            // Visual Stuff
             ImGui::Begin("Visual");
             
-            ImGui::Checkbox("No Camera Shake", &isNotShake);
+            if (ImGui::Checkbox("No Camera Shake", &isNotShake))
+            {
+                Mod::get()->setSavedValue<bool>("isNotShake", isNotDeathEffect);
+            }
 
             if (ImGui::Checkbox("No Death Effect", &isNotDeathEffect))
             {

@@ -1,3 +1,3 @@
 # ModMenuTest
 
-Simple Mod menu mod
+Just a simple mod menu
