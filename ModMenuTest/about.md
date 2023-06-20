@@ -1,5 +1,5 @@
-# Template Mod
+# Simple Mod Menu
 
-Just a small mod menu for windows
+A Simple mod menu
 
-**I have to give credit where credit is due, part of the code is 'ported' from crystal client**
+# A lot of these patches are 'ported' over from crystal client and megahack v5

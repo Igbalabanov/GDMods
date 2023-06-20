@@ -19,6 +19,7 @@ bool isNoclip = false;
 
 // Global
 auto isEditHack = Mod::get()->getSavedValue<bool>("isEditHack");
+auto isSliderHack = Mod::get()->getSavedValue<bool>("isSliderHack");
 
 // Visual
 auto isNotHide = Mod::get()->getSavedValue<bool>("isNotHide");
@@ -79,13 +80,24 @@ class $modify(PlayerObject) {
 
 
 void PatchGame() {
-    // Edit Hack
-    if (isEditHack) {Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x1E4A32), {0x90, 0x90});} // SRC: MHv5
+
+    log::info("PatchGame Called");
+
+    // Edit Hack. Patch from MHv5
+    if (isEditHack) {Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x1E4A32), {0x90, 0x90});}
     else {Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x1E4A32), {0x75, 0x6C});}
 
-    // Slider Bypass
-    if (isEditHack) {Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x1E4A32), {0x90, 0x90});} // SRC: MHv5
-    else {Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x1E4A32), {0x75, 0x6C});}
+
+    // Slider Bypass. Patch from MHv5
+    if (isSliderHack) {
+        Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x2E5CA), {0xEB});
+        Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x2E5F8), {0xEB});
+    } else {
+        Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x2E5CA), {0x76});
+        Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x2E5F8), {0x76});
+    }
+
+
 }
 
 
@@ -215,11 +227,13 @@ $on_mod(Loaded) {
             
             if (ImGui::Checkbox("Edit Hack", &isEditHack))
             {
+                Mod::get()->setSavedValue<bool>("isEditHack", isEditHack);
                 PatchGame();
             }
 
-            if (ImGui::Checkbox("Slider Bypass", &isEditHack))
+            if (ImGui::Checkbox("Slider Bypass", &isSliderHack))
             {
+                Mod::get()->setSavedValue<bool>("isSliderHack", isSliderHack);
                 PatchGame();
             }
 
