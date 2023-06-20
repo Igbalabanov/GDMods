@@ -6,15 +6,21 @@
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/loader/Mod.hpp>
 #include <Geode/modify/PlayerObject.hpp>
+#include <Geode/modify/GJGameLevel.hpp>
+
 #include <Geode/modify/CCKeyboardDispatcher.hpp>
 
 using namespace geode::prelude;
 
 bool isMenuShown = true;
 
-
+// Cheats
 bool isNoclip = false;
 
+// Global
+auto isEditHack = Mod::get()->getSavedValue<bool>("isEditHack");
+
+// Visual
 auto isNotHide = Mod::get()->getSavedValue<bool>("isNotHide");
 auto isNotShake = Mod::get()->getSavedValue<bool>("isNotShake");
 auto isNotDeathEffect = Mod::get()->getSavedValue<bool>("isNotDeathEffect");
@@ -70,9 +76,17 @@ class $modify(PlayerObject) {
     }
 };
 
+
+
+void PatchGame() {
+    if (isEditHack) {Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x1E4A32), {0x90, 0x90});} // SRC: MHv5
+    else {Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x1E4A32), {0x75, 0x6C});}
+}
+
+
 $on_mod(Loaded) {
 
-    
+    PatchGame();
 
     ImGuiCocos::get().setup([&] {
         // ImGui Style from https://www.unknowncheats.me/forum/c-and-c-/189635-imgui-style-settings.html
@@ -145,9 +159,20 @@ $on_mod(Loaded) {
 
 
             // Cheats and more stuff
-            ImGui::Begin("Player");
+            ImGui::Begin("Cheats");
             
             ImGui::Checkbox("Noclip", &isNoclip);
+
+            ImGui::End();
+
+
+            // Global
+            ImGui::Begin("Global");
+            
+            if (ImGui::Checkbox("Edit Hack", &isEditHack))
+            {
+                PatchGame();
+            }
 
             ImGui::End();
 
@@ -157,7 +182,7 @@ $on_mod(Loaded) {
             
             if (ImGui::Checkbox("No Camera Shake", &isNotShake))
             {
-                Mod::get()->setSavedValue<bool>("isNotShake", isNotDeathEffect);
+                Mod::get()->setSavedValue<bool>("isNotShake", isNotShake);
             }
 
             if (ImGui::Checkbox("No Death Effect", &isNotDeathEffect))

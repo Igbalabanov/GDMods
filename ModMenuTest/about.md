@@ -1,3 +1,5 @@
 # Template Mod
 
-Edit about.md to change this
+Just a small mod menu for windows
+
+**I have to give credit where credit is due, part of the code is 'ported' from crystal client**

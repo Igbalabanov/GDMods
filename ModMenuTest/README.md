@@ -1,3 +1,3 @@
 # ModMenuTest
 
-Just a simple mod menu
+Just a small mod menu for windows
