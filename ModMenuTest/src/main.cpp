@@ -12,6 +12,7 @@
 
 using namespace geode::prelude;
 
+
 bool isMenuShown = true;
 
 // Cheats
@@ -84,8 +85,8 @@ void PatchGame() {
     log::info("PatchGame Called");
 
     // Edit Hack. Patch from MHv5
-    if (isEditHack) {Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x1E4A32), {0x90, 0x90});}
-    else {Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x1E4A32), {0x75, 0x6C});}
+    if (isEditHack) Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x1E4A32), {0x90, 0x90});
+    else Mod::get()->patch(reinterpret_cast<void*>(base::get() + 0x1E4A32), {0x75, 0x6C});
 
 
     // Slider Bypass. Patch from MHv5
@@ -201,13 +202,11 @@ $on_mod(Loaded) {
         if (isMenuShown) {
             ImGui::Begin("Misc");
             
-            if (ImGui::Button("AppData"))
-            {
+            if (ImGui::Button("AppData")) {
                 ShellExecuteA(NULL, "open", CCFileUtils::get()->getWritablePath().c_str(), NULL, NULL, SW_SHOWDEFAULT);
             }
 
-            if (ImGui::Button("Settings"))
-            {
+            if (ImGui::Button("Settings")) {
                 OptionsLayer::addToCurrentScene(false);
             }
 
@@ -225,14 +224,12 @@ $on_mod(Loaded) {
             // Global
             ImGui::Begin("Global");
             
-            if (ImGui::Checkbox("Edit Hack", &isEditHack))
-            {
+            if (ImGui::Checkbox("Edit Hack", &isEditHack)) {
                 Mod::get()->setSavedValue<bool>("isEditHack", isEditHack);
                 PatchGame();
             }
 
-            if (ImGui::Checkbox("Slider Bypass", &isSliderHack))
-            {
+            if (ImGui::Checkbox("Slider Bypass", &isSliderHack)) {
                 Mod::get()->setSavedValue<bool>("isSliderHack", isSliderHack);
                 PatchGame();
             }
@@ -244,13 +241,11 @@ $on_mod(Loaded) {
             // Visual Stuff
             ImGui::Begin("Visual");
             
-            if (ImGui::Checkbox("No Camera Shake", &isNotShake))
-            {
+            if (ImGui::Checkbox("No Camera Shake", &isNotShake)) {
                 Mod::get()->setSavedValue<bool>("isNotShake", isNotShake);
             }
 
-            if (ImGui::Checkbox("No Death Effect", &isNotDeathEffect))
-            {
+            if (ImGui::Checkbox("No Death Effect", &isNotDeathEffect)) {
                 Mod::get()->setSavedValue<bool>("isNotDeathEffect", isNotDeathEffect);
             }
 
