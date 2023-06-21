@@ -2,4 +2,4 @@
 
 A Simple mod menu
 
-# A lot of these patches are 'ported' over from crystal client and megahack v5
+This mod is now its own repository. [Its repo can be found here](https://github.com/Igbalabanov/Cobalt-Menu).
